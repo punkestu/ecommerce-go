@@ -6,8 +6,6 @@ import (
 	"github.com/punkestu/ecommerce-go/internal/repo"
 )
 
-//var ErrWrongPassword = errors.New("wrong password")
-
 type Product struct {
 	productRepo repo.Product
 }
@@ -21,6 +19,7 @@ func (p *Product) Create(product request.ProductCreate) (int32, error) {
 		Name:     product.Name,
 		Price:    product.Price,
 		SellerID: product.SellerID,
+		Stock:    product.InitStock,
 	})
 }
 

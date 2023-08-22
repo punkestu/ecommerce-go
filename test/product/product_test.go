@@ -1,12 +1,13 @@
 package product
 
 import (
+	"testing"
+
 	"github.com/punkestu/ecommerce-go/internal/entity"
 	"github.com/punkestu/ecommerce-go/internal/entity/request"
 	"github.com/punkestu/ecommerce-go/internal/repo/mocks"
 	"github.com/punkestu/ecommerce-go/internal/service"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 var r *mocks.Product
@@ -17,6 +18,7 @@ var dummyProduct = &entity.Product{
 	Name:     "The Product",
 	Price:    1000,
 	SellerID: 1,
+	Stock:    100,
 }
 
 func TestPerson(t *testing.T) {
@@ -29,15 +31,16 @@ func TestPerson(t *testing.T) {
 func TestCreate(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		r.On("Create", entity.Product{
-			ID:       int32(0),
 			Name:     dummyProduct.Name,
 			Price:    dummyProduct.Price,
 			SellerID: dummyProduct.SellerID,
+			Stock:    dummyProduct.Stock,
 		}).Return(dummyProduct.ID, nil)
 		id, err := s.Create(request.ProductCreate{
-			Name:     dummyProduct.Name,
-			Price:    dummyProduct.Price,
-			SellerID: dummyProduct.ID,
+			Name:      dummyProduct.Name,
+			Price:     dummyProduct.Price,
+			SellerID:  dummyProduct.ID,
+			InitStock: dummyProduct.Stock,
 		})
 		assert.Nil(t, err)
 		assert.Equal(t, dummyProduct.ID, id)
