@@ -1,21 +1,26 @@
 package service
 
 import (
+	"github.com/punkestu/ecommerce-go/internal/domain"
 	"github.com/punkestu/ecommerce-go/internal/entity"
 	"github.com/punkestu/ecommerce-go/internal/entity/request"
 	"github.com/punkestu/ecommerce-go/internal/repo"
 )
 
 type Product struct {
-	productRepo repo.Product
+	product repo.Product
+	user    domain.Person
 }
 
-func NewProduct(Repo repo.Product) *Product {
-	return &Product{productRepo: Repo}
+func NewProduct(Repo repo.Product, userDomain domain.Person) *Product {
+	return &Product{product: Repo, user: userDomain}
 }
 
 func (p *Product) Create(product request.ProductCreate) (int32, error) {
-	return p.productRepo.Create(entity.Product{
+	if _, err := p.user.GetByID(product.SellerID); err != nil {
+		return int32(0), err
+	}
+	return p.product.Create(entity.Product{
 		Name:     product.Name,
 		Price:    product.Price,
 		SellerID: product.SellerID,
@@ -24,13 +29,13 @@ func (p *Product) Create(product request.ProductCreate) (int32, error) {
 }
 
 func (p *Product) GetAll() ([]*entity.Product, error) {
-	return p.productRepo.GetAll()
+	return p.product.GetAll()
 }
 
 func (p *Product) GetByName(name string) ([]*entity.Product, error) {
-	return p.productRepo.GetByName(name)
+	return p.product.GetByName(name)
 }
 
 func (p *Product) GetByID(id int32) (*entity.Product, error) {
-	return p.productRepo.GetByID(id)
+	return p.product.GetByID(id)
 }

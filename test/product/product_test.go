@@ -11,6 +11,7 @@ import (
 )
 
 var r *mocks.Product
+var person *mocks.Person
 var s *service.Product
 
 var dummyProduct = &entity.Product{
@@ -23,19 +24,22 @@ var dummyProduct = &entity.Product{
 
 func TestPerson(t *testing.T) {
 	r = mocks.NewProduct(t)
-	s = service.NewProduct(r)
+	person = mocks.NewPerson(t)
+	s = service.NewProduct(r, person)
 	assert.NotNil(t, r)
 	assert.NotNil(t, s)
 }
 
 func TestCreate(t *testing.T) {
+	r.On("Create", entity.Product{
+		Name:     dummyProduct.Name,
+		Price:    dummyProduct.Price,
+		SellerID: dummyProduct.SellerID,
+		Stock:    dummyProduct.Stock,
+	}).Return(dummyProduct.ID, nil)
+	person.On("GetByID", dummyProduct.SellerID).Return(&entity.Person{}, nil)
+	person.On("GetByID", dummyProduct.SellerID+1).Return(nil, entity.ErrPersonNotFound)
 	t.Run("Success", func(t *testing.T) {
-		r.On("Create", entity.Product{
-			Name:     dummyProduct.Name,
-			Price:    dummyProduct.Price,
-			SellerID: dummyProduct.SellerID,
-			Stock:    dummyProduct.Stock,
-		}).Return(dummyProduct.ID, nil)
 		id, err := s.Create(request.ProductCreate{
 			Name:      dummyProduct.Name,
 			Price:     dummyProduct.Price,
@@ -44,5 +48,17 @@ func TestCreate(t *testing.T) {
 		})
 		assert.Nil(t, err)
 		assert.Equal(t, dummyProduct.ID, id)
+	})
+	t.Run("Seller not found", func(t *testing.T) {
+		id, err := s.Create(request.ProductCreate{
+			Name:      dummyProduct.Name,
+			Price:     dummyProduct.Price,
+			SellerID:  dummyProduct.SellerID + 1,
+			InitStock: dummyProduct.Stock,
+		})
+		assert.NotNil(t, err)
+		assert.Equal(t, entity.ErrPersonNotFound, err)
+		assert.Equal(t, int32(0), id)
+		assert.NotEqual(t, dummyProduct.ID, id)
 	})
 }
