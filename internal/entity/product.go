@@ -1,6 +1,9 @@
 package entity
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Product struct {
 	ID       int32  `json:"id"`
@@ -11,3 +14,4 @@ type Product struct {
 }
 
 var ErrProductNotFound = fmt.Errorf("product %w", ErrNotFound)
+var ErrProductOutOfStock = fmt.Errorf("product %w", errors.New("out of stock"))
