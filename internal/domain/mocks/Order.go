@@ -12,6 +12,20 @@ type Order struct {
 	mock.Mock
 }
 
+// Cancel provides a mock function with given fields: _a0
+func (_m *Order) Cancel(_a0 string) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // Create provides a mock function with given fields: _a0
 func (_m *Order) Create(_a0 *entity.Order) (string, error) {
 	ret := _m.Called(_a0)
@@ -34,6 +48,34 @@ func (_m *Order) Create(_a0 *entity.Order) (string, error) {
 	}
 
 	return r0, r1
+}
+
+// Deliver provides a mock function with given fields: _a0
+func (_m *Order) Deliver(_a0 string) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Finish provides a mock function with given fields: _a0
+func (_m *Order) Finish(_a0 string) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // GetByID provides a mock function with given fields: _a0
@@ -112,6 +154,34 @@ func (_m *Order) GetByUser(_a0 int32) ([]*entity.Order, error) {
 	}
 
 	return r0, r1
+}
+
+// Pay provides a mock function with given fields: _a0
+func (_m *Order) Pay(_a0 string) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Process provides a mock function with given fields: _a0
+func (_m *Order) Process(_a0 string) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // NewOrder creates a new instance of Order. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
