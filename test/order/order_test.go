@@ -21,6 +21,7 @@ var dummyOrder = &entity.Order{
 	PersonId:  1,
 	ProductId: 1,
 	Qty:       10,
+	State:     entity.StateProcessing,
 }
 
 func TestOrder(t *testing.T) {
@@ -32,11 +33,21 @@ func TestOrder(t *testing.T) {
 	assert.NotNil(t, s)
 }
 
+func TestState(t *testing.T) {
+	r.On("GetByID", dummyOrder.ID).Return(dummyOrder, nil)
+	r.On("UpdateState", dummyOrder.ID, entity.StateDelivery).Return(nil)
+	t.Run("Success", func(t *testing.T) {
+		err := s.Deliver(dummyOrder.ID)
+		assert.Nil(t, err)
+	})
+}
+
 func TestCreate(t *testing.T) {
 	r.On("Create", &entity.Order{
 		PersonId:  dummyOrder.PersonId,
 		ProductId: dummyOrder.ProductId,
 		Qty:       dummyOrder.Qty,
+		State:     entity.StateWaitForPayment,
 	}).Return(dummyOrder.ID, nil)
 	person.On("GetByID", dummyOrder.PersonId).Return(&entity.Person{}, nil)
 	product.On("GetByID", dummyOrder.ProductId).Return(&entity.Product{Stock: 100}, nil)

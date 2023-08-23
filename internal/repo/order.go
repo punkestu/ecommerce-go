@@ -7,4 +7,5 @@ type Order interface {
 	GetByUser(int32) ([]*entity.Order, error)
 	GetByProduct(int32) ([]*entity.Order, error)
 	Create(*entity.Order) (string, error)
+	UpdateState(string, entity.OrderState) error
 }

@@ -7,4 +7,8 @@ type Order interface {
 	GetByUser(int32) ([]*entity.Order, error)
 	GetByProduct(int32) ([]*entity.Order, error)
 	Create(*entity.Order) (string, error)
+	Pay(string) error
+	Deliver(string) error
+	Finish(string) error
+	Cancel(string) error
 }
